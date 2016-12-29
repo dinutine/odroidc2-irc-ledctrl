@@ -8,8 +8,11 @@ The goal of this project is to control the led light strips from my mobile phone
 
 
 I'm using LED strips from Dymond:
+
 http://www.dymondgroup.be/?portfolio=splashproof-led-strip
+
 And an odroid-c2 as controller:
+
 http://www.hardkernel.com/main/products/prdt_info.php?g_code=G145457216438
 
 
@@ -64,6 +67,7 @@ make
 ```
 
 Flashing the sd card with the sdcard.img
+
 (replace mmcblkx by the actual sdcard interface e.g. mmcblk0):
 ```
 sudo dd if=output/images/sdcard.img of=/dev/mmcblkx
@@ -75,7 +79,8 @@ Put the sd card in your odroid-c2 and boot it.
 ### Fixed IP address
 
 In my setup, I want the odroid-c2 to have a fixed IP address (in my case 192.168.0.47)
-Create /etc/networking/interfaces on the odroid-c2 to:
+
+Create /etc/networking/interfaces on the odroid-c2:
 
 ```
 auto lo
@@ -92,7 +97,9 @@ iface eth0 inet static
 
 #### Schematic
 Use the GPIO header on the odroid-c2 to connect an IR led.
+
 I used pin 2,6 and 12 from the header:
+
 http://odroid.com/dokuwiki/doku.php?id=en:c2_gpio_default
 
 
@@ -127,14 +134,16 @@ GPIO #238               |
 ```
 
 This is what I ordered to implement this:
-http://www.digikey.be/product-detail/en/molex-llc/0850400012/WM4350-ND/2421281
-http://www.digikey.be/product-detail/en/chip-quik-inc/SBBTH1506-1/SBBTH1506-1-ND/5978222
-http://www.digikey.com/product-detail/en/everlight-electronics-co-ltd/IR333-A/1080-1080-ND/2675571
+* http://www.digikey.be/product-detail/en/molex-llc/0850400012/WM4350-ND/2421281
+* http://www.digikey.be/product-detail/en/chip-quik-inc/SBBTH1506-1/SBBTH1506-1-ND/5978222
+* http://www.digikey.com/product-detail/en/everlight-electronics-co-ltd/IR333-A/1080-1080-ND/2675571
 
 
 #### Testing the circuit.
 
-The IR LED is invisible with the human eye, but the cameras on a mobile phone often don't have an IR filter. So capture the IR LED with your mobile phone while toggling the LED:
+The IR LED is invisible with the human eye, but the cameras on a mobile phone often don't have an IR filter.
+
+So capture the IR LED with your mobile phone while toggling the LED:
 
 ```
 echo 238 > /sys/class/gpio/export
@@ -149,11 +158,13 @@ echo 0 > /sys/class/gpio/gpio238/value
 
 Remark:
 This gpio might be in use by the gpioblaster module. (when you compiled including my skeleton)
+
 do "rmmod lirc_gpioblaster" to free the gpio first
 
 #### Lirc gpioblaster
 
 Use the gpioblaster kernel module to be able to use the gpio as IRC transmitter:
+
 https://wiki.openwrt.org/doc/howto/lirc-gpioblaster
 
 Load the kernel modules:
@@ -164,17 +175,22 @@ insmod /lib/modules/3.14.29/kernel/drivers/media/rc/lirc_gpioblaster.ko gpio_out
 Now the /dev/lirc0 device is available and can be used by irsend
 
 Remark:
+
 /dev/lirc0 can also be called /dev/lirc1 depending on when the meson-ir.ko module is loaded.
+
 In this tutorial I will always load lirc_gpioblaster.ko first and later load meson-ir.ko.
 
 /dev/lirc0 is the home made IR transmitter using gpio 238
+
 /dev/lirc1 is the on board IR receiver
 
 
 ### Recording the Dymond IR controller
 
 To generate IR commands you need a configuration file containing the characteristics of the remote control protocol.
+
 This configuration file can be generated using the irrecord command.
+
 I used the on board IR receiver of the odroid-c2 to record the buttons of the Dymond remote control:
 
 ```
@@ -185,6 +201,7 @@ irrecord --disable-namespace --device=/dev/lirc1 Dymond
 ```
 
 The resulting file can be found in:
+
 skeleton/etc/lirc/lircd.conf.d/RCDymond.lircd.conf
 
 
@@ -228,6 +245,7 @@ $HTTP["scheme"] == "http" {
 ```
 
 By typing this into your browser's address bar should set the leds to green
+
 http://192.168.0.47/cgi-bin/irsend.sh?button=GREEN
 
 ### Creating web page and javascript
@@ -259,6 +277,7 @@ Create page in /var/www/index.html containing:
 ```
 
 Pressing the button will execute the cgi script and power the leds.
+
 More extensive example (with all buttons and styling) can be found in skeleton/var/www/index.html
 
 Done!
