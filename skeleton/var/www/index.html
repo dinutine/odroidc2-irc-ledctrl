@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>LED Control</title>
+<link href="favicon.png" rel="icon" type="image/png" />
+<script type="text/javascript">
+    function reqListener () {
+	//alert(this.responseText);
+	//document.getElementById('result').value = 'SUCCESS\n' + this.responseText;
+    }
+
+    function httpsend(method,url,data){
+	var ipaddr = "192.168.0.47";
+	//alert("Sending irsend " + ipaddr + " " + method + " " + url);
+	var xhr = new XMLHttpRequest();
+	//document.getElementById('result').value = '';
+	xhr.onload = reqListener;
+	xhr.open(method,'http://' + ipaddr + url, false);
+	xhr.send(data);	
+    }
+	
+    function irSend(button) {		
+	httpsend('GET','/cgi-bin/irsend.sh?button=' + button,"");
+    }
+</script>
+
+
+<link href="index.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    <h2> -  LED Control  - </h2>
+
+<table>
+  <tr>
+<td><button class="button" style="background-color: #FFFFFF; color:#000000"  onclick="irSend('BRIGHTUP')"  >BU</button></td>
+<td><button class="button" style="background-color: #FFFFFF; color:#000000"  onclick="irSend('BRIGHTDOWN')">BD</button></td>
+<td><button class="button" style="background-color: #000000"                 onclick="irSend('FORWARD')"   >>>></button></td>
+<td><button class="button" style="background-color: #FF0000"                 onclick="irSend('POWER')"     >On</button></td>
+</tr>
+<tr>
+<td><button class="button" style="background-color: #FF0000"                 onClick="irSend('RED')"   >Red</button></td>
+<td><button class="button" style="background-color: #00FF00"                 onclick="irSend('GREEN')" >GR</button>
+</td>
+<td><button class="button" style="background-color: #0000FF"                 onclick="irSend('BLUE')"  >Blue</button></td>
+<td><button class="button" style="background-color: #FFFFFF; color:#000000"  onclick="irSend('WHITE')" >WT</button></td>
+</tr>
+<tr>
+<td><button class="button" style="background-color: #FF3300"                 onClick="irSend('KEY_31')"   ></button></td>
+<td><button class="button" style="background-color: #00FF33"                 onclick="irSend('KEY_32')" ></button></td>
+<td><button class="button" style="background-color: #3300FF"                 onclick="irSend('KEY_33')"  ></button></td>
+<td><button class="button" style="background-color: #FF33FF"                 onclick="irSend('KEY_34')" ></button></td>
+</tr>
+<tr>
+<td><button class="button" style="background-color: #FF9900"                 onClick="irSend('KEY_41')"   ></button></td>
+<td><button class="button" style="background-color: #00FF99"                 onclick="irSend('KEY_42')" ></button></td>
+<td><button class="button" style="background-color: #9900FF"                 onclick="irSend('KEY_43')"  ></button></td>
+<td><button class="button" style="background-color: #FF80FF"                 onclick="irSend('KEY_44')" ></button></td>
+</tr>
+<tr>
+<td><button class="button" style="background-color: #FFCC00"                 onClick="irSend('KEY_51')"   ></button></td>
+<td><button class="button" style="background-color: #00FFCC"                 onclick="irSend('KEY_52')" ></button></td>
+<td><button class="button" style="background-color: #CC00FF"                 onclick="irSend('KEY_53')"  ></button></td>
+<td><button class="button" style="background-color: #33CCFF"                 onclick="irSend('KEY_54')" ></button></td>
+</tr>
+<tr>
+<td><button class="button" style="background-color: #FFFF00"                 onClick="irSend('KEY_61')"   ></button></td>
+<td><button class="button" style="background-color: #00FFFF"                 onclick="irSend('KEY_62')" ></button></td>
+<td><button class="button" style="background-color: #FF00FF"                 onclick="irSend('KEY_63')"  ></button></td>
+<td><button class="button" style="background-color: #80CCFF"                 onclick="irSend('KEY_64')" ></button></td>
+</tr>
+<tr>
+<td><button class="button" style="background-color: #202020"                 onClick="irSend('KEY_74')"   >Q</button></td>
+<td><button class="button" style="background-color: #202020"                 onclick="irSend('KEY_84')" >S</button></td>
+<td><button class="button" style="background-color: #202020"                 onclick="irSend('KEY_B3')"  >F1</button></td>
+<td><button class="button" style="background-color: #202020"                 onclick="irSend('KEY_B4')" >F2</button></td>
+</tr>
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<!--
+<textarea type="text" name="result" id="result" rows="20" cols="60">
+</textarea>
+-->
+
+</body>
+</html>
+
+
+
