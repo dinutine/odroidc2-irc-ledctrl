@@ -1,0 +1,29 @@
+From 7e3def7f6a67487318186a8d680f638094e57ec0 Mon Sep 17 00:00:00 2001
+From: Stijn Last <stijnlast@gmail.com>
+Date: Sun, 7 Aug 2016 10:31:23 +0200
+Subject: [PATCH] bugfix: target - actual, can be negative, cast it to signed
+ int first
+
+When udelay actually sleeps for twice the amount of time, actual can be bigger then target.
+target and actual are unsigned int, cast it to signed before devision by 1000,
+otherwise the next udelay will be executed with a very large number, making the driver to hang.
+---
+ drivers/media/rc/lirc_gpioblaster.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/rc/lirc_gpioblaster.c b/drivers/media/rc/lirc_gpioblaster.c
+index 6ac3bd1..1d81d98 100644
+--- a/drivers/media/rc/lirc_gpioblaster.c
++++ b/drivers/media/rc/lirc_gpioblaster.c
+@@ -143,7 +143,7 @@ static long send_pulse_softcarrier(unsigned long length)
+ 			target += pulse_width;
+ 		}
+ 		initial_us = actual_us;
+-		target_us = actual_us + (target - actual) / 1000;
++		target_us = actual_us + ((int)(target - actual)) / 1000;
+ 		/*
+ 		 * Note - we've checked in ioctl that the pulse/space
+ 		 * widths are big enough so that d is > 0
+-- 
+1.9.1
+
