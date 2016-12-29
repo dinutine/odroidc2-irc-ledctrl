@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Load lirc kernel modules
+#
+#
+
+start() {
+	printf "Loading kernel modules "
+	insmod /lib/modules/3.14.29/kernel/drivers/media/rc/lirc_dev.ko
+	insmod /lib/modules/3.14.29/kernel/drivers/media/rc/lirc_gpioblaster.ko gpio_out_pin=238 invert=0
+	insmod /lib/modules/3.14.29/kernel/drivers/media/rc/meson-ir.ko
+	echo "OK"
+}
+
+stop() {
+	printf "Unloading kernel modules "
+	rmmod meson-ir
+	rmmod lirc_gpioblaster
+	rmmod lirc_dev
+	echo "OK"
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	stop
+	start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
